@@ -1,0 +1,28 @@
+
+{
+  "name": "pro-scrapping",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lovely": "node lovely/index.js",
+    "fun": "node fun/index.js",
+    "fun_2": "node fun_2/index.js",
+    "fun_3": "node fun_3/index.js",
+    "fun_4": "node fun_4/index.js",
+    "fun_5": "node fun_5/index.js",
+    "fun_6": "node fun_6/index.js",
+    "fun_7": "node fun_7/index.js",
+    "fun_8": "node fun_8/index.js",
+    "fun_9": "node fun_9/index.js",
+    "fun_10": "node fun_10/index.js",
+    "fun_11": "node fun_11/index.js"
+  },
+  "dependencies": {
+    "puppeteer": "^11.0.0"
+  },
+  "devDependencies": {
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6"
+  }
+}
