@@ -19,7 +19,8 @@
     "fun_8": "node fun_8/index.js",
     "fun_9": "node fun_9/index.js",
     "fun_10": "node fun_10/index.js",
-    "fun_11": "node fun_11/index.js"
+    "fun_11": "node fun_11/index.js",
+    "womanizer": "node womanizer/index.js"
   },
   "dependencies": {
     "puppeteer": "^11.0.0"

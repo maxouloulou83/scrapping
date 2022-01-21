@@ -31,7 +31,7 @@ let lib = require("../module/lib.js");
     let productCount = 0;
 
     // Nom du fichier d'enregistrement
-    const filename = 'dorcel-product.json';
+    const filename = 'dorcel-p2-product.json';
 
     // Attendre que le selector des produits charge
     await page.waitForSelector('#root-wrapper > div > div > div.main-container.col2-left-layout > div.main.container.show-bg > div > div.col-main.grid12-9.grid-col2-main.no-right-gutter > div > div.category-products > ul > li');

@@ -2,6 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6f0b3e72-181d-4faa-99e2-55b4659cdba3" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/womanizer/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lovely_2/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/lovely_2/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lovely_3/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/lovely_3/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -52,7 +56,7 @@
       <updated>1642588547990</updated>
       <workItem from="1642588549277" duration="26123000" />
       <workItem from="1642756685327" duration="1724000" />
-      <workItem from="1642758433683" duration="1518000" />
+      <workItem from="1642758433683" duration="15720000" />
     </task>
     <servers />
   </component>
