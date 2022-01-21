@@ -21,7 +21,7 @@ let lib = require("../module/lib.js");
     await page.waitForNavigation();
 
     // Ouvre la page principal avec la liste des produits
-    await page.goto('https://www.lovely-planet-distribution.com/fra/docutheque/dorcel.html');
+    await page.goto('https://www.lovely-planet-distribution.com/fra/docutheque/dorcel.html?p=2');
     console.log('go on dorcels products pages')
 
     // Array ou toutes les données seront stocker
@@ -60,8 +60,8 @@ let lib = require("../module/lib.js");
             "height": 1080,
             "deviceScaleFactor": 1.0
         })
-        
-        
+
+
         await productPage.goto(productLink.toString())
 
         const selectImage = '#itemslider-zoom > div> div > div > div > a';
@@ -105,7 +105,7 @@ let lib = require("../module/lib.js");
             title = ['']
         });
         // console.log(title)
-        
+
 
         // Description
         let description;
@@ -120,7 +120,7 @@ let lib = require("../module/lib.js");
             description = ''
         });
         // console.log(description)
-        
+
 
         // Longue Description
         let descriptionLong;
@@ -148,7 +148,7 @@ let lib = require("../module/lib.js");
         });
         // console.log(price)
 
-        
+
         // matiere
         let matiere;
         await productPage.waitForSelector(selectMatiere, {timeout: 100000}).then(async () => {
@@ -171,8 +171,8 @@ let lib = require("../module/lib.js");
             colors = ''
         });
         // console.log(colors)
-        
-        
+
+
         //reference
         let reference;
         await productPage.waitForSelector(selectReference, {timeout: 10000}).then(async () => {
@@ -188,7 +188,7 @@ let lib = require("../module/lib.js");
         });
         // console.log(reference)
 
-        
+
         // EAN
         let EAN;
         await productPage.waitForSelector(selectEAN, {timeout: 100000}).then(async () => {
