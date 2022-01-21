@@ -6,6 +6,9 @@
   "main": "index.js",
   "scripts": {
     "lovely": "node lovely/index.js",
+    "lovely_2": "node lovely_2/index.js",
+    "lovely_3": "node lovely_3/index.js",
+    "lovely_4": "node lovely_4/index.js",
     "fun": "node fun/index.js",
     "fun_2": "node fun_2/index.js",
     "fun_3": "node fun_3/index.js",
