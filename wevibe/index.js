@@ -5,7 +5,7 @@ let lib = require("../module/lib.js");
 (async () => {
 
     const browser = await puppeteer.launch({headless: true});
-    const mainUrl = 'https://www.womanizer.com/fr/all-products';
+    const mainUrl = 'https://www.we-vibe.com/fr/sex-toys';
     const page = await browser.newPage();
     await page.goto(mainUrl);
 
@@ -16,13 +16,13 @@ let lib = require("../module/lib.js");
     let productCount = 0;
 
     // Nom du fichier d'enregistrement
-    const filename = 'womanizer-product.json';
+    const filename = 'we-vibe-all-product.json';
 
     // Attendre que le selector des liquides charge
-    await page.waitForSelector('#amasty-shopby-product-list > div.products--wrapper > ol > li > div > div > a');
+    await page.waitForSelector('#amasty-shopby-product-list > div.products.products--grid.grid > ol > li > div > div > a');
 
     // Stock toutes les infos des buttons vers les collections
-    const products = await page.$$('#amasty-shopby-product-list > div.products--wrapper > ol > li > div > div > a');
+    const products = await page.$$('#amasty-shopby-product-list > div.products.products--grid.grid > ol > li > div > div > a');
 
     // Recupère les urls
     const ProductPropertyJsHandles = await Promise.all(
@@ -50,12 +50,11 @@ let lib = require("../module/lib.js");
 
         await productPage.goto(productLink.toString())
 
-        const selectImage = '#maincontent > div.columns > div > div > div > div > div  > div > div > div > div > div > img';
-        const selectTitle = '#maincontent > div.columns > div > div> div.info__title > div.page-title-wrapper > h1 > span';
-        const selectDesc = ' #maincontent > div.columns > div > div > div.info__short.product__attribute > div';
-        const selectColors = "//span[contains(., 'Colors')]//following::span[1]";
-        const selectMatiere = "//span[contains(., 'Matériel du tête')]//following::span[1]";
-        const selectPrice = '#maincontent > div.columns > div > div > div.info__price.product-info-price > div.price-box.price-final_price > div > span > span > span > span';
+        const selectImage = '#maincontent > div.columns.container-fluid > div > div > div > div > div > div > div > div > div  > div > img';
+        const selectTitle = '#maincontent > div.columns.container-fluid > div > div > div.info__title > div.page-title-wrapper > h1 > span';
+        const selectDesc = '#maincontent > div.columns.container-fluid > div > div.product__info.info.col-12.col-md-5.offset-md-1.product-info-main > div.info__short.body2.product__attribute > div';
+        const selectColors = '#product-options-wrapper > div > div > div > div > div';
+        const selectPrice = '#maincontent > div.columns.container-fluid > div > div > div > div > span.old-price > span > span > span ';
 
         let images;
         await productPage.waitForSelector(selectImage).then(async () => {
@@ -71,9 +70,9 @@ let lib = require("../module/lib.js");
             );
 
         }).catch(() => {
-            images = ''
+            images = ['']
         });
-        // console.log(images)
+        console.log(images)
 
 
         // Titre
@@ -86,7 +85,7 @@ let lib = require("../module/lib.js");
         }).catch(() => {
             title = ['']
         });
-        // console.log(title)
+        console.log(title)
 
         // Description
         let description;
@@ -102,38 +101,24 @@ let lib = require("../module/lib.js");
         });
         console.log(description)
 
-        // colors
+        // Titre
         let colors;
-        await productPage.waitForXPath(selectColors, {timeout: 5000}).then(async () => {
-            let elHandle = await productPage.$x(selectColors);
+        await productPage.waitForSelector(selectColors).then(async () => {
+            const data = await productPage.$$(selectColors)
 
-            let colors = await productPage.evaluate(
-                el => (el.textContent)
-                    .replace('. ', ''),
-                elHandle[0]
+            const ProductColorsPropertyJsHandles = await Promise.all(
+                data.map(handle => handle.getProperty('aria-label'))
             );
 
-            // colors = parseInt(colors.split('/')[''])
+            // Envoie les liens json dans un array
+            colors = await Promise.all(
+                ProductColorsPropertyJsHandles.map(handle => handle.jsonValue())
+            );
+
         }).catch(() => {
-            colors = [''];
+            colors = ''
         });
         console.log(colors)
-
-        // colors
-        let matiere;
-        await productPage.waitForXPath(selectMatiere, {timeout: 5000}).then(async () => {
-            let elHandle = await productPage.$x(selectMatiere);
-            let matiereString = await productPage.evaluate(
-                el => (el.textContent)
-                    (elHandle[''])
-            );
-            matiere = matiereString.split(', ');
-        }).catch(() => {
-            matiere = ['']
-        });
-        // console.log(matiere)
-
-
 
         // Price
         let price;
@@ -145,7 +130,9 @@ let lib = require("../module/lib.js");
         }).catch(() => {
             price = 0;
         });
-        // console.log(price)
+        console.log(price)
+
+
 
 
         // Stock les informations du liquide dans l'array reprenenant les anciennes données
@@ -153,13 +140,12 @@ let lib = require("../module/lib.js");
             ...data,
             {
                 type: 'product',
-                brand: 'womanizer',
+                brand: 'fun',
                 images,
                 title,
                 description,
                 colors,
-                matiere,
-                price
+                price,
             }
         ];
 

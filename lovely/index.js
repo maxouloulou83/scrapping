@@ -76,7 +76,7 @@ let lib = require("../module/lib.js");
 
 
         let images;
-        await productPage.waitForSelector(selectImage).then(async () => {
+        await productPage.waitForSelector(selectImage, {slowmo: 10000}, {timeout:10000}).then(async () => {
             const data = await productPage.$$(selectImage)
 
             const ProductImagesPropertyJsHandles = await Promise.all(
@@ -97,7 +97,7 @@ let lib = require("../module/lib.js");
 
         // Titre
         let title;
-        await productPage.waitForSelector(selectTitle).then(async () => {
+        await productPage.waitForSelector(selectTitle, {slowmo: 10000}, {timeout:10000}).then(async () => {
             title = await productPage.$eval(selectTitle,
                 (el) => (el.innerHTML)
             );
@@ -109,7 +109,7 @@ let lib = require("../module/lib.js");
 
         // Description
         let description;
-        await productPage.waitForSelector(selectDesc, {timeout: 100000}).then(async () => {
+        await productPage.waitForSelector(selectDesc, {slowmo: 10000}, {timeout:10000}).then(async () => {
             description = await productPage.$eval(selectDesc,
                 (el) => (el.innerHTML)
                     .replace(/<\/?[^>]+(>|$)/g, '')
@@ -124,7 +124,7 @@ let lib = require("../module/lib.js");
 
         // Longue Description
         let descriptionLong;
-        await productPage.waitForSelector(selectDescLong, {timeout: 10000}).then(async () => {
+        await productPage.waitForSelector(selectDescLong, {slowmo: 10000}, {timeout:10000}).then(async () => {
             descriptionLong = await productPage.$eval(selectDescLong,
                 (el) => (el.innerHTML)
                     .replace(/<\/?[^>]+(>|$)/g, '')
@@ -138,7 +138,7 @@ let lib = require("../module/lib.js");
 
         // Price
         let price;
-        await productPage.waitForSelector(selectPrice).then(async () => {
+        await productPage.waitForSelector(selectPrice, {slowmo: 10000}, {timeout:10000}).then(async () => {
             price = await productPage.$eval(selectPrice,
                 (el) => parseFloat((el.innerHTML)
                     .replace(',', '.'))
@@ -151,31 +151,31 @@ let lib = require("../module/lib.js");
         
         // matiere
         let matiere;
-        await productPage.waitForSelector(selectMatiere, {timeout: 100000}).then(async () => {
+        await productPage.waitForSelector(selectMatiere, {slowmo: 10000}, {timeout:10000}).then(async () => {
             matiere = await productPage.$eval(selectMatiere,
                 (el) => (el.innerHTML)
             );
         }).catch(() => {
             matiere = ''
         });
-        // console.log(matiere)
+        console.log(matiere)
 
 
         //colors
         let colors;
-        await productPage.waitForSelector(selectColors, {timeout: 100000}).then(async () => {
+        await productPage.waitForSelector(selectColors, {slowmo: 10000}, {timeout:10000}).then(async () => {
             colors = await productPage.$eval(selectColors,
                 (el) => (el.innerHTML)
             );
         }).catch(() => {
             colors = ''
         });
-        // console.log(colors)
+        console.log(colors)
         
         
         //reference
         let reference;
-        await productPage.waitForSelector(selectReference, {timeout: 10000}).then(async () => {
+        await productPage.waitForSelector(selectReference, {slowmo: 10000}, {timeout:100000}).then(async () => {
             reference = await productPage.$eval(selectReference,
                 (el) => (el.innerHTML)
                     .replace(/<\/?[^>]+(>|$)/g, '')
@@ -186,12 +186,12 @@ let lib = require("../module/lib.js");
         }).catch(() => {
             reference = 0
         });
-        // console.log(reference)
+        console.log(reference)
 
         
         // EAN
         let EAN;
-        await productPage.waitForSelector(selectEAN, {timeout: 100000}).then(async () => {
+        await productPage.waitForSelector(selectEAN, {slowmo: 10000}, {timeout:100000}).then(async () => {
             EAN = await productPage.$eval(selectEAN,
                 (el) => (el.innerHTML)
                     .replace(/<\/?[^>]+(>|$)/g, '')
@@ -202,7 +202,7 @@ let lib = require("../module/lib.js");
         }).catch(() => {
             EAN = 0
         });
-        // console.log(EAN)
+        console.log(EAN)
 
 
         // Stock les informations du produit dans l'array reprenenant les anciennes données

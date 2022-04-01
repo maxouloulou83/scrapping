@@ -4,10 +4,25 @@ let lib = require("../module/lib.js");
 
 (async () => {
 
+    const selectUser = 'michael@reves-intimes.fr';
+    const selectPass = '030584';
     const browser = await puppeteer.launch({headless: true});
-    const mainUrl = 'https://b2b.funfactory.com/de/products/sundaze';
+    const mainUrl = 'https://www.lovely-planet-distribution.com/fra/customer/account/login/';
     const page = await browser.newPage();
     await page.goto(mainUrl);
+    console.log('Login page loading')
+    await page.setDefaultNavigationTimeout(160000);
+    await page.click('#email');
+    await page.keyboard.type(selectUser);
+    await page.click('#pass');
+    await page.keyboard.type(selectPass);
+    await page.click('#send2');
+    console.log('login...')
+    await page.waitForNavigation();
+
+    // Ouvre la page principal avec la liste des produits
+    await page.goto('https://www.lovely-planet-distribution.com/fra/docutheque/shunga.html?p=5');
+    console.log('go on shunga products pages')
 
     // Array ou toutes les données seront stocker
     let data = [];
@@ -16,13 +31,13 @@ let lib = require("../module/lib.js");
     let productCount = 0;
 
     // Nom du fichier d'enregistrement
-    const filename = 'fun-pulsator-product.json';
+    const filename = 'shunga_p5-product.json';
 
-    // Attendre que le selector des liquides charge
-    await page.waitForSelector('#gf-products > div > div > div > a');
+    // Attendre que le selector des produits charge
+    await page.waitForSelector('#root-wrapper > div > div > div.main-container.col2-left-layout > div.main.container.show-bg > div > div.col-main.grid12-9.grid-col2-main.no-right-gutter > div > div.category-products > ul > li');
 
     // Stock toutes les infos des buttons vers les collections
-    const products = await page.$$('#gf-products > div > div > div > a');
+    const products = await page.$$('#root-wrapper > div > div > div.main-container.col2-left-layout > div.main.container.show-bg > div > div.col-main.grid12-9.grid-col2-main.no-right-gutter > div > div.category-products > ul > li > a');
 
     // Recupère les urls
     const ProductPropertyJsHandles = await Promise.all(
@@ -47,16 +62,18 @@ let lib = require("../module/lib.js");
         })
 
 
-
         await productPage.goto(productLink.toString())
 
-        const selectImage = '.product__thumb';
-        const selectTitle = 'div > div > div > div > div > h1';
-        const selectDesc = ' #ProductSection-5257004220553 > div > div > div > div:nth-child(3) > div';
-        const selectColors = ' div.variant-wrapper.variant-wrapper > fieldset > div > input';
-        const selectPrice = '.product__price';
+        const selectImage = '#itemslider-zoom > div> div > div > div > a';
+        const selectTitle = '#product_addtocart_form > div.product-shop.grid12-5 > div.product-name > h1';
+        const selectDesc = '#product-tabs > div > div:nth-child(2) > div';
+        const selectDescLong = '#product-tabs > div > div:nth-child(2) > div';
+        const selectPrice = '#amfpc-product\\.info\\.simple > div.price-in-fiche > div > div.grid12-6.no-gutter.ppr > span > span.price-ppr > span';
+        const selectMatiere = '#product-attribute-specs-table > tbody > tr:nth-child(5) > td';
+        const selectColors = '#product-attribute-specs-table > tbody > tr:nth-child(9) > td';
         const selectReference = '#amfpc-custom_tierprice > div.grid12-6.no-gutter.details-right.packings > span:nth-child(1)';
         const selectEAN = '#amfpc-custom_tierprice > div.grid12-6.no-gutter.details-right.packings > span:nth-child(5)';
+
 
         let images;
         await productPage.waitForSelector(selectImage).then(async () => {
@@ -71,6 +88,7 @@ let lib = require("../module/lib.js");
                 ProductImagesPropertyJsHandles.map(handle => handle.jsonValue())
             );
 
+
         }).catch(() => {
             images = ''
         });
@@ -82,15 +100,13 @@ let lib = require("../module/lib.js");
         await productPage.waitForSelector(selectTitle).then(async () => {
             title = await productPage.$eval(selectTitle,
                 (el) => (el.innerHTML)
-                    .replace(' ', '')
             );
         }).catch(() => {
             title = ['']
         });
-        console.log(title)
-
         // console.log(title)
-        //
+
+
         // Description
         let description;
         await productPage.waitForSelector(selectDesc, {timeout: 100000}).then(async () => {
@@ -105,24 +121,20 @@ let lib = require("../module/lib.js");
         });
         // console.log(description)
 
-        // Titre
-        let colors;
-        await productPage.waitForSelector(selectColors, {timeout: 10000}).then(async () => {
-            const data = await productPage.$$(selectColors)
 
-            const ProductColorsPropertyJsHandles = await Promise.all(
-                data.map(handle => handle.getProperty('value'))
+        // Longue Description
+        let descriptionLong;
+        await productPage.waitForSelector(selectDescLong, {timeout: 10000}).then(async () => {
+            descriptionLong = await productPage.$eval(selectDescLong,
+                (el) => (el.innerHTML)
+                    .replace(/<\/?[^>]+(>|$)/g, '')
+                    .replace(/&nbsp;/g, ' ')
+                    .trim()
             );
-
-            // Envoie les couleurs json dans un array
-            colors = await Promise.all(
-                ProductColorsPropertyJsHandles.map(handle => handle.jsonValue())
-            );
-
         }).catch(() => {
-            colors = ['']
+            descriptionLong = ''
         });
-        console.log(colors)
+        // console.log(descriptionLong)
 
         // Price
         let price;
@@ -136,9 +148,34 @@ let lib = require("../module/lib.js");
         });
         // console.log(price)
 
+
+        // matiere
+        let matiere;
+        await productPage.waitForSelector(selectMatiere, {timeout: 100000}).then(async () => {
+            matiere = await productPage.$eval(selectMatiere,
+                (el) => (el.innerHTML)
+            );
+        }).catch(() => {
+            matiere = ''
+        });
+        // console.log(matiere)
+
+
+        //colors
+        let colors;
+        await productPage.waitForSelector(selectColors, {timeout: 100000}).then(async () => {
+            colors = await productPage.$eval(selectColors,
+                (el) => (el.innerHTML)
+            );
+        }).catch(() => {
+            colors = ''
+        });
+        // console.log(colors)
+
+
         //reference
         let reference;
-        await productPage.waitForSelector(selectReference, {slowmo: 10000}, {timeout:100000}).then(async () => {
+        await productPage.waitForSelector(selectReference, {timeout: 10000}).then(async () => {
             reference = await productPage.$eval(selectReference,
                 (el) => (el.innerHTML)
                     .replace(/<\/?[^>]+(>|$)/g, '')
@@ -149,12 +186,12 @@ let lib = require("../module/lib.js");
         }).catch(() => {
             reference = 0
         });
-        console.log(reference)
+        // console.log(reference)
 
 
         // EAN
         let EAN;
-        await productPage.waitForSelector(selectEAN, {slowmo: 10000}, {timeout:100000}).then(async () => {
+        await productPage.waitForSelector(selectEAN, {timeout: 100000}).then(async () => {
             EAN = await productPage.$eval(selectEAN,
                 (el) => (el.innerHTML)
                     .replace(/<\/?[^>]+(>|$)/g, '')
@@ -165,33 +202,33 @@ let lib = require("../module/lib.js");
         }).catch(() => {
             EAN = 0
         });
-        console.log(EAN)
+        // console.log(EAN)
 
 
-
-
-        // Stock les informations du liquide dans l'array reprenenant les anciennes données
+        // Stock les informations du produit dans l'array reprenenant les anciennes données
         data = [
             ...data,
             {
                 type: 'product',
-                brand: 'fun',
+                brand: 'lovely',
                 images,
                 title,
                 description,
-                colors,
+                description_long: descriptionLong,
                 price,
+                matiere,
+                colors,
                 reference,
                 EAN
             }
         ];
 
-        // Incrémentation du nombre de liquide enregistrer
+        // Incrémentation du nombre de produits enregistrer
         productCount++;
 
-        // console.log(`${productCount} - "${title}" ☑️`)
+        console.log(`${productCount} - "${title}" 🍓️`)
 
-        // Ferme la page du liquide
+        // Ferme la page du produit
         await productPage.close();
     }
 
@@ -199,7 +236,7 @@ let lib = require("../module/lib.js");
     lib.storeData(data, `./data/${filename}`)
 
     // Message de fin
-    console.log(`\n${productCount} les sextoys bien enregsitrer: "${filename}"`)
+    console.log(`\n${productCount} produits ont été enregistrer dans le fichier: "${filename}"`)
 
     // Ferme le navigateur
     await browser.close();
